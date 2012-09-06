@@ -1,0 +1,3 @@
+[submodule "pry-docmore.wiki"]
+	path = pry-docmore.wiki
+	url = git://github.com/rking/pry-docmore.wiki.git
