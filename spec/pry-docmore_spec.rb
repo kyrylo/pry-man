@@ -41,7 +41,7 @@ def it_explains_each args
     args[:cases].each do |e|
       e[args[:specifically]].each do |v|
         self.example.metadata[:description_args] = v + description
-        multiline_content = %r/\n.+\n.+/
+        multiline_content = %r/.+\n.+/
         Pry::Docmore.explain(v).should match multiline_content
       end
     end
