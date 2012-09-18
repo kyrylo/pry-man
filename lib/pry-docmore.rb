@@ -1,6 +1,9 @@
 # encoding: utf-8
 class Pry
   class Docmore
+    Pry.commands.command ',?', 'Doc more — see global/keyword info' do
+      Pry.output.puts Pry::Docmore.explain arg_string.strip
+    end
     def self.find_docs pattern
       input = Dir['pry-docmore.wiki/*.md'].map do |file_name|
         if file_name.match pattern
