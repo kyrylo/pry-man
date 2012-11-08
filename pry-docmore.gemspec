@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
     gsub(/\(Dollar[^)]+\)/, '').
     gsub(/\.md/, '').
     gsub(/\s+/, ' ')
-  puts 'Desc is: ' + gem.description
+  # puts 'Desc is: ' + gem.description
   gem.license = 'CC0'
   gem.homepage = 'https://github.com/rking/pry-docmore/wiki'
   gem.email = 'pry-docmore@sharpsaw.org'
