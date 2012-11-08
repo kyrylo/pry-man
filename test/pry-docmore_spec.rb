@@ -57,13 +57,10 @@ class Pry::DocmoreTest < MiniTest::Unit::TestCase
         },
         {
           source: 'ruby -e "p global_variables.map(&:to_s)"',
-          vars: ["$;", "$-F", "$@", "$!", "$SAFE", "$~", "$&", "$`", "$'",
-            "$+", "$=", "$KCODE", "$-K", "$,", "$/", "$-0", "$\\", "$_",
-            "$stdin", "$stdout", "$stderr", "$>", "$<", "$.", "$FILENAME",
-            "$-i", "$*", "$?", "$$", "$:", "$-I", "$LOAD_PATH", "$\"",
-            "$LOADED_FEATURES", "$VERBOSE", "$-v", "$-w", "$-W", "$DEBUG",
-            "$-d", "$0", "$PROGRAM_NAME", "$-p", "$-l", "$-a", "$1", "$2",
-            "$3", "$4", "$5", "$6", "$7", "$8", "$9"]
+          vars: %w($; $-F $@ $! $SAFE $~ $& $` $' $+ $= $KCODE $-K $" $/ $-0
+          $\\ $_ $stdin $stdout $stderr $> $< $. $FILENAME $-i $* $? $$ $: $-I
+          $LOAD_PATH $\\ $LOADED_FEATURES $VERBOSE $-v $-w $-W $DEBUG $-d $0
+          $PROGRAM_NAME $-p $-l $-a $1 $2 $3 $4 $5 $6 $7 $8 $9)
         },
       #  {
       #    source: 'pry: ls -g',
