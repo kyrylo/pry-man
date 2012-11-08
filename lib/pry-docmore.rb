@@ -12,7 +12,10 @@ class Pry
     end
 
     Pry.commands.command ',?', 'Doc more — see global/keyword info' do
+      _pry_.output.puts "Note: The ,? command will be the plain ? command.\n" +
+        Pry::Docmore.explain(arg_string)
     end
+
     def self.find_docs pattern
       input = Dir['pry-docmore.wiki/*.md'].map do |file_name|
         if file_name.match pattern
