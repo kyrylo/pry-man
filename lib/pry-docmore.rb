@@ -26,8 +26,10 @@ class Pry
     def self.raw; @DOCS end
     def self.explain thing
       @DOCS.each do |label, docs|
-        # TODO: colored label
-        return docs[:explanations][thing] if docs[:explanations].has_key? thing
+        # TODO: URL for each
+        if explanation = docs[:explanations][thing]
+          return Pry::Helpers::Text.yellow(thing) + $/ + explanation
+        end
       end
       nil
     end
@@ -41,7 +43,6 @@ class Pry
       def process arg_string
         if docmore = Pry::Docmore.explain(arg_string)
           _pry_.output.puts docmore
-          $/
         else
           ORIGINAL_SHOW_DOC.new(context).call_safely(arg_string)
         end
@@ -53,7 +54,7 @@ class Pry
         Pry::Docmore.raw.each do |label, docs|
           # Pry needs a general mechanism to columnize things, and when it gets
           # one, this can use it:
-          _pry_.output.puts "#{label}s".yellow + ': ' +
+          _pry_.output.puts Pry::Helpers::Text.yellow("#{label}s") + ': ' +
             docs[:explanations].keys.join(' ')
         end
       end

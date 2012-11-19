@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 Gem::Specification.new do |gem|
-  gem.version = '0.0.1'
+  gem.version = '0.0.2'
   gem.name = 'pry-docmore'
   gem.summary = 'Documents keywords and special vars. Currently uses the `,?` command, but soon plain `?`'
   gem.description = `cd pry-docmore.wiki/; echo Ruby*`.
