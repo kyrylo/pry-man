@@ -3,8 +3,8 @@ require 'pry'
 class Pry
   class Docmore
     def self.find_docs pattern
-      # XXX File.basename(__FILE__) +
-      input = Dir['pry-docmore.wiki/*.md'].map do |file_name|
+      path = File.dirname(__FILE__) + '/../pry-docmore.wiki/*.md'
+      input = Dir[path].map do |file_name|
         if file_name.match pattern
           item = $1
           item.sub! '⁄', '/' # Had to use Unicode "Fraction Slash" in filename.
