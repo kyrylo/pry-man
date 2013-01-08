@@ -1,5 +1,4 @@
-require 'test_helper'
-require 'minitest/autorun'
+require './test/test_helper'
 
 class Pry::DocmoreTest < MiniTest::Unit::TestCase
   def assert_each_explained args
