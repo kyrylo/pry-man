@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
   gem.license = 'CC0'
   gem.homepage = 'https://github.com/rking/pry-docmore/wiki'
   gem.email = 'pry-docmore@sharpsaw.org'
-  gem.authors = %w(☈king)
+  gem.authors = %w(☈king ConradIrwin)
   %w(pry pry-doc).each {|e| gem.add_dependency e}
   gem.files = Dir['{lib,pry-docmore.wiki}/**/*']
 end
