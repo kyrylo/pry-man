@@ -1,14 +1,15 @@
 # encoding: utf-8
 require 'pry'
+require 'yaml'
 class Pry
   class Docmore
     def self.find_docs pattern
-      path = File.dirname(__FILE__) + '/../pry-docmore.wiki/*.md'
-      input = Dir[path].map do |file_name|
-        if file_name.match pattern
+      docs = YAML.load_file File.dirname(__FILE__) + '/../docmores.yaml'
+      input = docs.map do |k,v|
+        if k.match pattern
           item = $1
           item.sub! '⁄', '/' # Had to use Unicode "Fraction Slash" in filename.
-          [ item, File.read(file_name) ]
+          [ item, v ]
         end
       end.compact
       Hash[input]
@@ -16,7 +17,7 @@ class Pry
     @DOCS = {
       'Keyword' => {
         source: 'ruby source, lex.c, circa line 219',
-        explanations: find_docs(%r/Ruby Keyword: (.+)\.md/)
+        explanations: find_docs(%r/Ruby Keyword: (.+)/)
       },
       'Global Variable' => {
         source: 'Started from: http://www.zenspider.com/Languages/Ruby/QuickRef.html#pre-defined-variables',
