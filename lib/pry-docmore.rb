@@ -12,7 +12,7 @@ class Pry
           [ item, v ]
         end
       end.compact
-      Hash[input]
+      Hash[input.sort]
     end
     @DOCS = {
       'Keyword' => {
