@@ -16,5 +16,5 @@ Gem::Specification.new do |gem|
   gem.email = 'pry-docmore@sharpsaw.org'
   gem.authors = %w(☈king ConradIrwin)
   %w(pry pry-doc).each {|e| gem.add_dependency e}
-  gem.files = Dir['{lib,pry-docmore.wiki}/**/*']
+  gem.files = Dir['lib/**/*'] + %w(docmores.yaml)
 end
