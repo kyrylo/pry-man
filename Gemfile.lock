@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    pry-docmore (0.0.4)
+    pry-docmore (0.1.0)
       pry
       pry-doc
 
