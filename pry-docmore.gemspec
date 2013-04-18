@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 Gem::Specification.new do |gem|
-  gem.version = '0.1.0'
+  gem.version = '0.1.1'
   gem.name = 'pry-docmore'
   gem.summary = 'Documents keywords and special vars. Currently uses the `,?` command, but soon plain `?`'
   gem.description = 'Enhanced show-doc (a.k.a ? command) for: ' +
