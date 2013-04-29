@@ -11,9 +11,9 @@ This project will fix that, and anything else along these lines.
 This project's [wiki](https://github.com/rking/pry-docmore/wiki/_pages) hosts
 the canonical home for the data.
 
-Edit away!  (I mean that. I'd love to add in whatever additional thoguhts you
+Edit away!  (I mean that. I'd love to add in whatever additional thoughts you
 have. The goal is to be really informative, so your perspective and examples
-count for a lot in my book.)
+count for a lot.)
 
 ## License
 
