@@ -1,0 +1,23 @@
+---
+keywords|alias: |
+  Makes synonyms of methods. This is *not* similar to {Module#alias_method}.
+  This is a keyword, and not a method call. Note that there's no comma in between
+  the arguments. The call is happening at compile-time.
+
+  ##### Basic Usage
+      def old_name
+        2015
+      end
+      alias new_name old_name
+
+      new_name #=> 2015
+
+  * Execute also: ? Module#alias_method
+  * See also: [alias_method_chain](http://goo.gl/sGofKl)
+globals|$stdout: |-
+  The current standard output. Usually, this is file descriptor 1.
+
+  * Execute also: ? $stdin
+  * Execute also: ? $stderr
+Home: |
+  * Keywords

@@ -1,7 +1,21 @@
 # coding: utf-8
 require 'yaml'
 
-class PryMan
+require 'pry-man/commands'
+
+module PryMan
+  def self.find_docs(pattern)
+    docs = YAML.load_file File.dirname(__FILE__) + '/../man.yaml'
+    input = docs.map do |k,v|
+      if k.match pattern
+        item = $1
+        item.sub! '⁄', '/' # Had to use Unicode "Fraction Slash" in filename.
+        [ item, v ]
+      end
+    end.compact
+    Hash[input.sort]
+  end
+
   @DOCS = {
     'Keyword' => {
       source: 'ruby source, lex.c, circa line 219',
@@ -13,17 +27,6 @@ class PryMan
     },
   }
 
-  def self.find_docs(pattern)
-    docs = YAML.load_file File.dirname(__FILE__) + '/../docmores.yaml'
-    input = docs.map do |k,v|
-      if k.match pattern
-        item = $1
-        item.sub! '⁄', '/' # Had to use Unicode "Fraction Slash" in filename.
-        [ item, v ]
-      end
-    end.compact
-    Hash[input.sort]
-  end
 
   def self.raw
     @DOCS
@@ -31,7 +34,7 @@ class PryMan
 
   def self.explain(thing)
     @DOCS.each do |label, docs|
-      # TODO: URL for each
+      binding.pry
       if explanation = docs[:explanations][thing]
         return Pry::Helpers::Text.yellow(thing) + $/ + explanation
       end

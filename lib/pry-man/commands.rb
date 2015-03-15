@@ -25,7 +25,7 @@ module PryMan
       if man = PryMan.explain(arg_string)
         _pry_.output.puts(man)
       else
-        ORIGINAL_SHOW_DOC.new(context).call_safely(arg_string)
+        ORIG_SHOW_DOC.new(context).call_safely(arg_string)
       end
     end
   end
@@ -41,4 +41,7 @@ module PryMan
       end
     end
   end
+
+  Pry::Commands.add_command(PryMan::Command::ShowDoc)
+  Pry::Commands.add_command(PryMan::Command::Mans)
 end
