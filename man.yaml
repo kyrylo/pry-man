@@ -4,13 +4,14 @@ keywords|alias: |
   This is a keyword, and not a method call. Note that there's no comma in between
   the arguments. The call is happening at compile-time.
 
-  ##### Basic Usage
-      def old_name
-        2015
-      end
-      alias new_name old_name
+  ``` Basic usage
+    def old_name
+      2015
+    end
+    alias new_name old_name
 
-      new_name #=> 2015
+    new_name #=> 2015
+  ```
 
   * Execute also: ? Module#alias_method
   * See also: [alias_method_chain](http://goo.gl/sGofKl)
@@ -21,3 +22,28 @@ globals|$stdout: |-
   * Execute also: ? $stderr
 Home: |
   * Keywords
+keywords|and: |
+  Boolean conjunction. Only evaluates to `true` if both its left and right side
+  are true. The `and` operator is lower precedence operator than `&&`, so
+  `an_expression and another_expression` is roughly equivalent to:
+    (an_expression) && (another_expression)
+
+  Truth table
+
+    true  and true  ⇒ true
+    false and true  ⇒ false
+    false and false ⇒ false
+
+  Precedence
+
+    true and not false ⇒ true
+    true && not false ⇒ SyntaxError
+    a = true and false; a ⇒ true
+    a = true && false; a ⇒ false
+
+  The fowl chain
+
+    if false or true && false then false elsif true and false or true then true end
+    ⇒ true
+
+  See http://phrogz.net/ProgrammingRuby/language.html#table_18.4

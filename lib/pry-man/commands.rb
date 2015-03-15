@@ -1,6 +1,8 @@
 module PryMan
   Command = Class.new
-  ORIG_SHOW_DOC = Pry.commands['show-doc']
+  STORAGE = PryMan::ManualStorage.new(
+    File.join(File.dirname(__FILE__), '..', '..', 'man.yaml')
+  )
 
   class Command::ShowDoc < Pry::ClassCommand
     match 'show-doc'
@@ -21,27 +23,41 @@ module PryMan
       show-doc alias     # for a keyword
     BANNER
 
-    def process(arg_string)
-      if man = PryMan.explain(arg_string)
-        _pry_.output.puts(man)
+    ORIGINAL_SHOW_DOC = Pry.commands['show-doc']
+
+    include Pry::Helpers::DocumentationHelpers
+
+    def process(term)
+      if man = extract_man(term)
+        _pry_.pager.page(man)
       else
-        ORIG_SHOW_DOC.new(context).call_safely(arg_string)
+        ORIGINAL_SHOW_DOC.new(context).call_safely(term)
       end
+    end
+
+    def extract_man(term)
+      man = STORAGE.man_for(term)
+      title = Pry::Helpers::Text.yellow("\n#{man.last.first} (#{man.first})\n--\n")
+      description = process_comment_markup(man.last.last)
+      title + description
     end
   end
 
-  class Command::Mans < Pry::ClassCommand
+  class Command::Man < Pry::ClassCommand
     match 'mans'
-    description 'List all manual pages'
+    description 'List all man pages'
 
     def process
-      PryMan.raw.each do |label, docs|
-        _pry_.output.puts Pry::Helpers::Text.yellow("#{label}s") + ': ' +
-                        docs[:explanations].keys.join(' ')
+
+      out = STORAGE.mans.map do |category, items|
+        heading = Pry::Helpers::Text.send(_pry_.config.ls.heading_color, category)
+        Pry::Helpers.tablify_or_one_line(heading, items.map(&:first))
       end
+
+      _pry_.pager.page(out.join(""))
     end
   end
 
   Pry::Commands.add_command(PryMan::Command::ShowDoc)
-  Pry::Commands.add_command(PryMan::Command::Mans)
+  Pry::Commands.add_command(PryMan::Command::Man)
 end
