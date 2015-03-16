@@ -8,7 +8,7 @@ module PryMan
       @mans = Hash.new { |h, k| h[k] = [] }
 
       YAML.load_file(src).map do |k, v|
-        match = k.match(/^(keywords|globals|constants)\|(.+)\z/)
+        match = k.match(/^(keywords|globals|constants|pry)\|(.+)\z/)
         next unless match
         name = if match[2] == "$⁄"
                  match[2].sub!('⁄', '/') # To support the $/ global
