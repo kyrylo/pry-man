@@ -24,9 +24,11 @@ module PryMan
 
       category = @mans.find do |_category, items|
         item = items.find { |name, desc| name == term }
-      end.first
+      end
 
-      [category, item]
+      if category && item
+        [category.first, item]
+      end
     end
   end
 end

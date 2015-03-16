@@ -28,7 +28,7 @@ module PryMan
     include Pry::Helpers::DocumentationHelpers
 
     def process(term)
-      if args.any? && (man = extract_man(term))
+      if args.any? && (man = extract_man(term)) && man
         _pry_.pager.page(man)
       else
         ORIGINAL_SHOW_DOC.new(context).call_safely(term)
@@ -36,10 +36,11 @@ module PryMan
     end
 
     def extract_man(term)
-      man = STORAGE.man_for(term)
-      title = Pry::Helpers::Text.yellow("\n#{man.last.first} (#{man.first})\n--\n")
-      description = process_comment_markup(man.last.last)
-      title + description
+      if man = STORAGE.man_for(term)
+        title = Pry::Helpers::Text.yellow("\n#{man.last.first} (#{man.first})\n--\n")
+        description = process_comment_markup(man.last.last)
+        title + description
+      end
     end
   end
 
