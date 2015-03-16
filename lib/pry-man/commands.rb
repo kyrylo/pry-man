@@ -28,7 +28,7 @@ module PryMan
     include Pry::Helpers::DocumentationHelpers
 
     def process(term)
-      if man = extract_man(term)
+      if args.any? && (man = extract_man(term))
         _pry_.pager.page(man)
       else
         ORIGINAL_SHOW_DOC.new(context).call_safely(term)
@@ -48,10 +48,9 @@ module PryMan
     description 'List all man pages'
 
     def process
-
       out = STORAGE.mans.map do |category, items|
         heading = Pry::Helpers::Text.send(_pry_.config.ls.heading_color, category)
-        Pry::Helpers.tablify_or_one_line(heading, items.map(&:first))
+        Pry::Helpers.tablify_or_one_line(heading, items.sort.map(&:first))
       end
 
       _pry_.pager.page(out.join(""))
