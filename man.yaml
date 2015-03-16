@@ -781,7 +781,7 @@ pry|commands: |
      pry(main)>  ls
      => "hello"
 
-  # The help command
+  ## The help command
 
   The help command outputs a list of all commands currently defined in Pry, along
   with a short description of what that command does:
@@ -796,7 +796,7 @@ pry|commands: |
   The help command can also be used to show more details about each individual
   command.
 
-  # The command prefix
+  ## The command prefix
 
   As stated above, command evaluation takes precedence over normal Ruby code
   execution. This precedence order should not normally be an issue, but if turns
@@ -842,7 +842,7 @@ pry|commands: |
      locals: _  _ex_  _pry_  _in_  _out_  _file_  _dir_
      pry(main)>
 
-  # Command Interpolation
+  ## Command Interpolation
 
   As discussed cursorily in accessing the system shell you can directly
   interpolate Ruby code into commands through the use of the standard `#{}`
@@ -877,7 +877,7 @@ pry|commands: |
      ...
      ...
 
-  # Custom commands
+  ## Custom commands
 
   It is of course possible to add commands to Pry itself, either at runtime or in
   your `~/.pryrc`, for a full guide to the various possibilities, see the `custom
@@ -935,7 +935,7 @@ pry|commands: |
      pry(main)* end
      => nil
 
-  # Command sets
+  ## Command sets
 
   Internally, commands are organised into command sets; and once you've mastered
   the basics of creating your own commands, you'll want to start organising them.
@@ -1125,6 +1125,77 @@ keywords|true: |
 
   * Execute also: ? false
   * Execute also: ? nil
+pry|pryrc: |
+  The `.pryrc` file is analogous to the `.irbrc` file for IRB.  You can use the
+  `.pryrc` file to customize Pry.
+
+  When pry starts, it checks for a `.pryrc` file in your home
+  directory(`~/.pryrc`) and also for a **per-project** `.pryrc` in the current
+  directory(`./.pryrc`). Both files are used if they exist, with the file from
+  your home directory being loaded first.
+
+  # Table of contents
+
+  * Loading and suppression
+  * Customize Pry in your .pryrc
+
+  ## Loading and suppression
+
+  The `.pryrc` files are the first files loaded after Pry is initialized but
+  before a session starts.  Notably, the `.pryrc` files are loaded *before*
+  plugins and Readline history are loaded, giving you an opportunity to control
+  these two features.
+
+  Suppression of `.pryrc` from loading:
+
+  * Command line suppression of `.pryrc`: Invoke the `pry` executable with the the
+    `-f` switch.
+  * Runtime invocation and suppression of `.pryrc`: Ensure that you set
+    `Pry.config.should_load_rc = false` before starting a session.
+
+  Example: Command line invocation and .pryrc suppression
+
+     crow:~ john$ pry -f
+     pry(main)>
+
+  Example: Runtime invocation and .pryrc suppression
+
+     Pry.config.should_load_rc = false
+     binding.pry
+
+  ## Customize Pry in your .pryrc
+
+  Nearly every aspect of Pry can be customized in the `.pryrc` file; we can change
+  the prompt, add command aliases, add or delete commands, disable certain
+  plugins, configure Readline history loading, turn off colors and paging, and so
+  on.
+
+  In the example below we `import` the Experimental command set, turn off paging
+  and color, add a command alias, define a new command, turn off history saving,
+  and change the prompt (these options explained further in the customization
+  and [commands](? commands) sections):
+
+  Example:
+
+     Pry.config.commands.import Pry::ExtendedCommands::Experimental
+
+     Pry.config.pager = false
+
+     Pry.config.color = false
+
+     Pry.config.commands.alias_command "lM", "ls -M"
+
+     Pry.config.commands.command "add", "Add a list of numbers together" do |*args|
+       output.puts "Result is: #{args.map(&:to_i).inject(&:+)}"
+     end
+
+     Pry.config.history.should_save = false
+
+     Pry.config.prompt = [proc { "input> " },
+                          proc { "     | " }]
+
+     # Disable pry-buggy-plug:
+     Pry.plugins["buggy-plug"].disable!
 globals|$-w: |
   An alias of $VERBOSE.
 
