@@ -1,17 +1,329 @@
 ---
+globals|$': |
+  The string to the right of the last successful match.
+keywords|__FILE__: |
+  The name of the file currently being executed, including path relative to the
+  directory where the application was started up (or the current directory, if it
+  has been changed). The current file is, in some cases, different from the
+  startup file for the running application, which is available in the global
+  variable $0.
+
+  * Execute also: ? $0
+globals|$;: |
+  The default separator for String#split.
+keywords|def: |
+  Paired with a terminating end, constitutes a method definition. Starts a new
+  local scope; local variables in existence when the def block is entered are not
+  in scope in the block, and local variables created in the block do not survive
+  beyond the block.
+
+  def can be used either with or without a specific object:
+
+    * def method_name
+    * def object.singleton_method_name
+
+  The parameter list comes after the method name, and can (and usually is) wrapped
+  in parentheses.
+
+  * Execute also: ? end
+globals|$.: |
+  The current input line number of the last file that was read.
+keywords|defined?: |
+  The defined? expression tests whether or not expression refers to anything
+  recognizable (literal object, local variable that has been initialized, method
+  name visible from the current scope, etc.). The return value is nil if the
+  expression cannot be resolved. Otherwise, the return value provides information
+  about the expression.
+
+  Note that the expression is not executed.
+
+     p defined?(def x; end)   # "expression"
+     x                        # error: undefined method or variable
+
+     p defined?(@x=1)         # "assignment"
+     p @x                     # nil
+
+  Assignment to a local variable will, however, have the usually result of
+  initializing the variable to nil by virtue of the assignment expression itself:
+
+     p defined?(x=1)          # assignment
+     p x                      # nil
+
+  In most cases, the argument to defined? will be a single identifier:
+
+    def x; end
+    p defined?(x)            # "method"
+globals|$-v: |
+  An alias of $VERBOSE.
+
+  * Execute also: ? $VERBOSE
+keywords|class: |
+  Opens a class definition block. Takes either a constant name or an expression of
+  the form << object. In the latter case, opens a definition block for the
+  singleton class of object.
+
+  Classes may be opened more than once, and methods and constants added during
+  those subsequent openings. class blocks have their own local scope; local
+  variables in scope already are not visible inside the block, and variables
+  created inside the block do not survive the block.
+
+     class Person
+       def name=(name)
+         @name = name
+       end
+     end
+
+     david = Person.new
+     class << david
+       def name=(name)
+         if name == "David"
+           @name = name
+         else
+           puts "Please don't name me other than David!"
+         end
+       end
+     end
+
+     david.name = "Joe" # Please don't name me other than David!"
+     joe = Person.new
+     joe.name = "Joe"
+
+  Inside a class block, self is set to the class object whose block it is. Thus
+  it‘s possible to write class methods (i.e., singleton methods on class objects)
+  by referring to self:
+
+    class Person
+      def self.species
+        "Homo sapiens"
+      end
+    end
+keywords|begin: |
+  Not to be confused with the upper-case `BEGIN`. Together with `end`, delimits
+  what is commonly called a "begin" block (to distinguish it from the Proc type
+  of code block).
+
+     x = something_falsy || begin
+       several_steps
+       go_here
+       3
+     end
+     # Now x == 3
+
+  "Begin" blocks also serve to scope exception raising and rescue operations. A
+  "begin" block can have an else clause, which serves no purpose (and generates a
+  warning) unless there's also a rescue clause, in which case the else clause is
+  executed when no exception is raised.
+
+     begin
+       1/0
+     rescue => e
+       p e
+     else
+       puts 'Cannot get here with that 1/0'
+     ensure
+       puts 'OK then.'
+     end
+
+  A "begin" block allows the use of while and until in modifier position with
+  multi-line statements.
+
+     # Usage with `until` or `while`.
+     begin
+       i += 1
+       puts i
+     end until i == 10
+
+  * Execute also: ? end
+globals|$_: |
+  The last input line of string by gets or readline.
+keywords|do: |
+  Paired with end, can delimit a code block:
+
+     array.each do |element|
+       puts element * 10
+     end
+
+  In this context, do/end is equivalent to curly braces, except that curly braces
+  have higher precedence. In this example:
+
+     puts [1,2,3].map {|x| x * 10 }
+
+  The code block binds to map; thus the output is:
+
+     10
+     20
+     30
+
+  In this version, however:
+
+     puts [1,2,3].map do |x| x * 10 end
+
+  the code is interpreted as `puts([1,2,3].map) do |x| x * 10 end`. Since puts
+  doesn't take a block, the block is ignored and the statement prints the value of
+  the blockless [1,2,3].map (which returns an Enumerator).
+
+  do can also (optionally) appear at the end of a for/in statement.
+
+  * Execute also: ? for
+  * Execute also: ? in
+  * Execute also: ? end
+keywords|self: |
+  self is the "current object" and the default receiver of messages (method calls)
+  for which no explicit receiver is specified. Which object plays the role of self
+  depends on the context.
+
+  * In a method, the object on which the method was called is self
+  * In a class or module definition (but outside of any method definition
+    contained therein), self is the class or module object being defined.
+  * In a code block associated with a call to class_eval (aka module_eval), self
+    is the class (or module) on which the method was called.
+  * In a block associated with a call to instance_eval or instance_exec, self is
+  the object on which the method was called.
+
+  self automatically receives message that don‘t have an explicit receiver:
+
+     class String
+       def upcase_and_reverse
+         upcase.reverse
+       end
+     end
+
+  In this method definition, the message upcase goes to self, which is whatever
+  string calls the method.
+globals|$<: |
+  The virtual concatenation file of the files given on command line (or from
+  $stdin if no files were given).
+keywords|__LINE__: |
+  The line number, in the current source file, of the current line.
+globals|$-a: |
+  True if option -a is set. Read-only variable.
+keywords|else: |
+  Denotes a final conditional branch. It appears in connection with if, unless,
+  and case, and rescue. (In the case of rescue, the else branch is executed if no
+  exception is raised). The else clause is always the last branch in the entire
+  statement, except in the case of rescue where it can be followed by an ensure
+  clause.
+
+  * Execute also: ? if
+  * Execute also: ? unless
+  * Execute also: ? case
+  * Execute also: ? rescue
+keywords|END: |
+  Designates, via code block, code to be executed just prior to program termination.
+
+     p 1
+     END { p 4 }
+     p 2
+     END { p 3 }
+     # …prints these out as 1, 2, 3, 4
+globals|$$: |
+  The process number of the Ruby running this script.
+constants|STDIN: |
+  The standard input. The default value for $stdin.
+globals|$!: |
+  The exception information message set by ‘raise’.
+keywords|while: |
+  while takes a condition argument, and executes the code that follows (up to a
+  matching end delimiter) while the condition is true.
+
+     i = 0
+     while i < 10
+       i += 1
+     end
+
+  The value of the whole while statement is the value of the last expression
+  evaluated the last time through the code. If the code is not executed (because
+  the condition is false at the beginning of the operation), the while statement
+  evaluates to nil.
+
+  while can also appear in modifier position, either in a single-line statement or
+  in a multi-line statement using a begin/end block. In the one-line case:
+
+     i = 0 i += 1 while i < 10
+
+  The leading code is not executed at all if the condition is false at the
+  start. However, in the "begin"-block case:
+
+     i = 0
+     begin
+       i += 1
+       puts i
+     end while i < 10
+
+  The block will be executed at least once, before the condition is tested the
+  first time.
+
+  * Execute also: ? until
+keywords|unless: |
+  The negative equivalent of if.
+
+     unless y.score > 10
+       puts "Sorry; you needed 10 points to win."
+     end
+
+  * Execute also: ? if
+keywords|undef: |
+  Undefines a given method, for the class or module in which it‘s called. If the
+  method is defined higher up in the lookup path (such as by a superclass), it can
+  still be called by instances classes higher up.
+
+     class C
+       def m
+         "Hi"
+       end
+     end
+     class D < C
+     end
+     class E < D
+     end
+
+     class D
+       undef m
+     end
+
+     C.new.m   # Hi
+     D.new.m   # error
+     E.new.m   # error
+
+  Note that the argument to undef is a method name, not a symbol or string.
+globals|$1: |
+  The Nth group of the last successful match. May be > 1.
+keywords|__END__: |
+  Denotes the end of the regular source code section of a program file. Lines
+  below __END__ will not be executed. Those lines will be available via the
+  special filehandle DATA. The following code will print out two stanzas of
+  personal information. Note that __END__ has to be flush left, and has to be the
+  only thing on its line.
+
+     DATA.each do |line|
+       first, last, phone, email = line.split('|')
+      puts <<-EOM
+      First name: #{first}
+      Last name:  #{last}
+      Phone:      #{phone}
+      Email:      #{email}
+         EOM
+      end
+    __END__
+    David|Black|123-456-7890|dblack@...
+    Someone|Else|321-888-8888|someone@else
+globals|$stderr: |
+  The current standard error output.
+
+  * Execute also: ? $stdin
+  * Execute also: ? $stdout
 keywords|alias: |
   Makes synonyms of methods. This is *not* similar to {Module#alias_method}.
   This is a keyword, and not a method call. Note that there's no comma in between
   the arguments. The call is happening at compile-time.
 
-  ``` Basic usage
+    # Basic usage
     def old_name
       2015
     end
     alias new_name old_name
 
     new_name #=> 2015
-  ```
 
   * Execute also: ? Module#alias_method
   * See also: [alias_method_chain](http://goo.gl/sGofKl)
@@ -20,30 +332,570 @@ globals|$stdout: |-
 
   * Execute also: ? $stdin
   * Execute also: ? $stderr
+keywords|when: |
+  * Execute aslo: ? case
+keywords|not: |
+  Boolean negation.
+
+     not true  # false
+     not 10    # false
+     not false # true
+
+  Similar in effect to the negating bang (!), but has lower precedence:
+
+    not 3 == 4 # true; interpreted as not (3 == 4)
+    !3 == 4    # false; interpreted as (!3) == 4, i.e., false == 4
+
+  The unary ! also differs in that it can be overridden.
 Home: |
   * Keywords
-keywords|and: |
-  Boolean conjunction. Only evaluates to `true` if both its left and right side
-  are true. The `and` operator is lower precedence operator than `&&`, so
-  `an_expression and another_expression` is roughly equivalent to:
+keywords|retry: |
+  Inside a rescue clause, retry causes Ruby to return to the top of the enclosing
+  code (the begin keyword, or top of method or block) and try executing the code
+  again.
+
+     a = 0
+     begin
+       1/a
+     rescue ZeroDivisionError => e
+       puts e.message
+       puts "Let's try that again..."
+       a = 1
+       retry
+     end
+     puts "That's better!"
+globals|$DEBUG: |
+  The debug flag, which is set by the -d switch. Enabling debug output prints each
+  exception raised to $stderr (but not its backtrace). Setting this to a true
+  value enables debug output as if -d were given on the command line. Setting this
+  to a false value disables debug output.
+globals|$\: |
+  The output record separator for the print and IO#write. Default is nil.
+globals|$stdin: |
+  The current standard input.
+
+  * Execute also: ? $stderr
+  * Execute also: ? $stdout
+globals|$>: |
+  The default output for print, printf. $stdout by default.
+
+  * Execute also: ? $stdout
+globals|$FILENAME: |
+  Current input file from $<. Same as $<.filename.
+
+  * Execute also: ? $<
+constants|FALSE: |
+  The false itself.
+keywords|super: |
+  Called from a method, searches along the method lookup path (the classes and
+  modules available to the current object) for the next method of the same name as
+  the one being executed. Such method, if present, may be defined in the
+  superclass of the object‘s class, but may also be defined in the superclass‘s
+  superclass or any class on the upward path, as well as any module mixed in to
+  any of those classes.
+
+     module Vehicular
+       def move_forward(n)
+         @position += n
+       end
+     end
+
+     class Vehicle
+       include Vehicular  # Adds Vehicular to the lookup path
+     end
+
+     class Car < Vehicle
+       def move_forward(n)
+         puts "Vrooom!"
+         super            # Calls Vehicular#move_forward
+       end
+     end
+
+  Called with no arguments and no empty argument list, super calls the appropriate
+  method with the same arguments, and the same code block, as those used to call
+  the current method. Called with an argument list or arguments, it calls the
+  appropriate methods with exactly the specified arguments (including none, in the
+  case of an empty argument list indicated by empty parentheses).
+globals|$⁄: |
+  The input record separator, newline by default.
+keywords|if: |
+  Ruby's basic conditional statement constructor. if evaluates its argument and
+  branches on the result. Additional branches can be added to an if statement with
+  else and elsif.
+
+     if m.score > n.score
+       puts "m wins!"
+     elsif n.score > m.score
+       puts "n wins!"
+     else
+       puts "Tie!"
+     end
+
+  An if statement can have more than one elsif clause (or none), but can only have
+  one else clause (or none). The else clause must come at the end of the entire
+  statement.
+
+  if can also be used in modifier position:
+
+     puts "You lose" if y.score < 10
+
+  then may optionally follow an if condition:
+
+     if y.score.nil? then
+       puts "Have you even played the game?"
+     end
+
+  * Execute also: ? unless
+  * Execute also: ? else
+  * Execute also: ? elsif
+keywords|in: |
+  Goes with the for keyword.
+
+  * Execute also: ? for
+keywords|false: |
+  Denotes a special object, the sole instance of FalseClass. false and nil are the
+  only objects that evaluate to Boolean falsehood in Ruby (informally, that cause
+  an if condition to fail)
+
+  * Execute also: ? true
+  * Execute also: ? nil
+globals|$@: |
+  Array of backtrace of the last exception thrown.
+keywords|redo: |
+  Causes unconditional re-execution of a code block, with the same parameter
+  bindings as the current execution.
+keywords|nil: |
+  A special "non-object". nil is, in fact, an object (the sole instance of
+  NilClass), but connotes absence and indeterminacy. nil and false are the only
+  two objects in Ruby that have Boolean falsehood (informally, that cause an if
+  condition to fail).
+
+  nil serves as the default value for uninitialized array elements and hash values
+  (unless the default is overridden).
+
+  * Execute also: ? false
+  * Execute also: ? true
+globals|$LOAD_PATH: |
+  The alias to the $:.
+
+  * Execute also: ? $:
+keywords|case: |
+  The case statement operator. Case statements consist of an optional condition,
+  which is in the position of an argument to case, and zero or more when
+  clauses. The first when clause to match the condition (or to evaluate to Boolean
+  truth, if the condition is null) "wins", and its code stanza is executed. The
+  value of the case statement is the value of the successful when clause, or nil
+  if there is no such clause.
+
+  A case statement can end with an else clause. Each when statement can have
+  multiple candidate values, separated by commas.
+
+     case x
+     when 1,2,3
+       puts "1, 2, or 3"
+     when 10
+       puts "10"
+     else
+       puts "Some other number"
+     end
+
+  Case equality (success by a when candidate) is determined by the case-equality
+  or "threequal" operator, ===. The above example is equivalent to:
+
+    if 1 === x or 2 === x or 3 === x
+      puts "1, 2, or 3"
+    elsif 10 === x
+      puts "10"
+    else
+      puts "Some other number"
+    end
+
+  === is typically overriden by classes to reflect meaningful case-statement
+  behavior; for example, /abc/ === "string" checks for a pattern match from the
+  string.
+
+  * Execute also: ? when
+keywords|return: |
+  Inside a method definition, executes the ensure clause, if present, and then returns control to the context of the method call. Takes an optional argument (defaulting to nil), which serves as the return value of the method. Multiple values in argument position will be returned in an array.
+
+     def three
+       return 3
+     ensure
+       puts "Enjoy the 3!"
+     end
+
+     a = three    # Enjoy the 3!
+     puts a   # 3
+
+  Inside a code block, the behavior of return depends on whether or not the block
+  constitutes the body of a regular Proc object or a lambda-style Proc object. In
+  the case of a lambda, return causes execution of the block to terminate. In the
+  case of a regular Proc, return attempts to return from the enclosing method. If
+  there is no enclosing method, it‘s an error.
+
+     ruby -e 'Proc.new {return}.call'
+     => -e:1:in `block in <main>': unexpected return (LocalJumpError)
+
+     ruby19 -e 'p lambda {return 3}.call'
+     => 3
+keywords|__ENCODING__: |
+  The current default encoding, as an Encoding instance.
+keywords|$": |
+  The array contains the module names loaded by require.
+constants|TRUE: |
+  The typical true value.
+globals|$-I: |
+  The alias to $:.
+
+  * Execute also: ? $:
+keywords|or: |
+  Boolean or. Differs from || in that or has lower precedence. This code:
+
+     puts "Hi" or "Bye"
+
+  is interpreted as (puts "Hi") or "Bye". Since puts "Hi" reduces to nil, the
+  whole expression reduces to nil or "Bye" which evaluates to "Bye". (The
+  side-effect printing of "Hi" does take place.)
+
+  This code, however:
+
+     puts "Hi" || "Bye"
+
+  is interpreted as puts("Hi" || "Bye"), which reduces to puts "Hi" (since "Hi" ||
+  "Bye" evaluates to "Hi").
+
+  * Execute also: ? and
+globals|$*: |
+  Command line arguments given for the script sans args.
+keywords|next: |
+  Bumps an iterator, or a while or until block,to the next iteration,
+  unconditionally and without executing whatever may remain of the block.
+
+     [0,1,2,3,4].each do |n|
+       next unless n > 2
+       puts "Big number: #{n}"
+     end
+
+     # Output
+     #=> Big number: 3
+     #=> Big number: 4
+
+  next is typically used in cases like iterating through a list of files and
+  taking action (or not) depending on the filename.
+
+  next can take a value, which will be the value returned for the current
+  iteration of the block.
+
+     sizes = [0,1,2,3,4].map do |n|
+       next("big") if n > 2
+       puts "Small number detected!"
+       "small"
+     end
+
+     p sizes
+
+     # Output
+     #=> Small number detected!
+     #=> Small number detected!
+     #=> Small number detected!
+     #=> ["small", "small", "small", "big", "big"]
+
+  Execute also: ? break
+globals|$?: |
+  The status of the last executed child process. This value is thread-local.
+keywords|yield: |
+  Called from inside a method body, yields control to the code block (if any)
+  supplied as part of the method call. If no code block has been supplied, calling
+  yield raises an exception.
+
+  yield can take an argument; any values thus yielded are bound to the block‘s
+  parameters. The value of a call to yield is the value of the executed code
+  block.
+globals|$-F: |
+  The alias to $;.
+
+  * Execute also: ? $;
+globals|$VERBOSE: |
+  The verbose flag, which is set by the -w or -v switch. Setting this to a true
+  value enables warnings as if -w or -v were given on the command line. Setting
+  this to nil disables warnings, including from Kernel#warn.
+globals|$&: |
+  The string matched by the last successful match.
+constants|STDERR: |
+  The standard error output. The default value for $stderr.
+globals|$-d: |
+  The alias of $DEBUG.
+
+  * Execute also: ? $DEBUG
+globals|$0: |
+  Contains the name of the script being executed. May be assignable.
+globals|$~: |
+  The information about the last match in the current scope.
+globals|$`: |
+  The string to the left of the last successful match.
+keywords|rescue: |
+  Designates an exception-handling clause. Can occur either inside a begin...end
+  block, inside a method definition (which implies begin), or in modifier position
+  (at the end of a statement).
+
+  By default, rescue only intercepts StandardError and its descendants, but you
+  can specify which exceptions you want handled, as arguments. (This technique
+  does not work when rescue is in statement-modifier position.) Moreover, you can
+  have more than one rescue clause, allowing for fine-grained handling of
+  different exceptions.
+
+  In a method (note that raise with no argument, in a rescue clause, re-raises the
+  exception that‘s being handled):
+
+     def file_reverser(file)
+       File.open(file) {|fh| puts fh.readlines.reverse }
+     rescue Errno::ENOENT
+       log "Tried to open non-existent file #{file}"
+       raise
+     end
+
+  In a begin/end block:
+
+     begin
+       1/0
+     rescue ZeroDivisionError
+       puts "No way"
+     end
+
+  In statement-modifier position:
+
+     while true
+       1/0
+     end rescue nil
+
+     david = Person.find(n) rescue Person.new
+
+  rescue (except in statement-modifier position) also takes a special argument in
+  the following form:
+
+     rescue => e
+
+  which will assign the given local variable to the exception object, which can
+  then be examined inside the rescue clause.
+keywords|BEGIN: |-
+  Not to be confused with lower-case `begin`. Designates, via code block, code
+  to be executed unconditionally before sequential execution of the program
+  begins. Sometimes used to simulate forward references to methods.
+
+    p 3
+    BEGIN { p 1 }
+    p 4
+    BEGIN { p 2 }
+    # prints these out as 1, 2, 3, 4
+
+  This works because the whole file gets parsed at the beginning (even though
+  'class' and 'def' lines are not executed early), so the interpreter can reorder
+  these statements.
+
+  * Execute also: ? END
+keywords|break: |
+  Causes unconditional termination of a code block or while or until block, with
+  control transfered to the line after the block.
+
+     ['a', 'b', 'c'].each do |i|
+       print i
+       9000.times do |j|
+         break if j > 2
+         print j
+       end
+     end
+     puts
+
+     #=> a012b012c012
+
+  If given an argument, returns that argument as the value of the terminated
+  block.
+
+     x = loop do break 3 end
+     p x
+     # => 3
+
+  * Execute also: ? next
+keywords|and: |-
+  Boolean conjunction. Only evaluates to true if both its left and right side
+  are true.
+
+    # Truth table
+    true  and true  #=> true
+    false and true  #=> false
+    true  and false #=> false
+    false and false #=> false
+
+  The and operator is lower precedence operator than &&, so
+
+    an_expression and another_expression
+
+  is roughly equivalent to
+
     (an_expression) && (another_expression)
 
-  Truth table
+    # Precedence
+    true and not false #=> true
+    true && not false #=> SyntaxError
+    a = true and false; a #=> true
+    a = true && false; a #=> false
 
-    true  and true  ⇒ true
-    false and true  ⇒ false
-    false and false ⇒ false
+  * Execute also: ? &&
+  * See also: [difference between "and", "&&", "or", "and"](http://goo.gl/n9zfSe)
+  * See also: [operator precedence](http://goo.gl/mXYHgu)
+globals|$,: |
+  The output field separator for the print and Array#join.
+constants|NIL: |
+  The nil itself.
+keywords|for: |
+  A loop constructor, used with in:
 
-  Precedence
+     for a in [1,2,3,4,5] do
+       puts a * 10
+     end
 
-    true and not false ⇒ true
-    true && not false ⇒ SyntaxError
-    a = true and false; a ⇒ true
-    a = true && false; a ⇒ false
+  for is generally considered less idiomatic than each; indeed, for calls each,
+  and is thus essentially a wrapper around it.
 
-  The fowl chain
+     obj = Object.new
 
-    if false or true && false then false elsif true and false or true then true end
-    ⇒ true
+     def obj.each
+       yield 1; yield 2
+     end
 
-  See http://phrogz.net/ProgrammingRuby/language.html#table_18.4
+     for a in obj
+       puts a
+     end
+
+     # Output:
+     #=> 1
+     #=> 2
+
+  However, the difference between for and each is that for does not introduce a
+  new scope.
+
+     for a in [1, 2]
+       n = 1000
+     end
+     puts n
+
+     # Output:
+     #=> 1000
+
+  The do keyword may optionally appear at the end of the for expression:
+
+     for a in array do
+       # etc.
+
+  * Execute also: ? in
+  * Execute also: ? Array#each
+globals|$-p: |
+  True if option -p is set. Read-only variable.
+keywords|then: |
+  Optional component of conditional statements (if, unless, when). Never
+  mandatory, but allows for one-line conditionals without semi-colons. The
+  following two statements are equivalent:
+
+     if a > b; puts "a wins!" end
+     if a > b then puts "a wins!" end
+
+  * Execute also: ? if
+  * Execute also: ? for
+keywords|end: |
+  Marks the end of a while, until, begin, if, def, class, or other keyword-based,
+  block-based construct.
+
+  * Execute also: ? while
+  * Execute also: ? until
+  * Execute also: ? begin
+  * Execute also: ? if
+  * Execute also: ? def
+  * Execute also: ? class
+globals|$-l: |
+  True if option -l is set. Read-only variable.
+keywords|until: |
+  The inverse of while: executes code until a given condition is true, i.e., while
+  it is not true. The semantics are the same as those of while.
+
+  * Execute aslo: ? while
+globals|$=: |
+  The flag for case insensitive, nil by default.
+'globals|$:': |
+  Load path for scripts and binary modules by load or require.
+keywords|ensure: |
+  Marks the final, optional clause of a begin/end block, generally in cases where
+  the block also contains a rescue clause. The code in the ensure clause is
+  guaranteed to be executed, whether control flows to the rescue block or not.
+
+     begin
+       1/0
+     rescue ZeroDivisionError
+       puts "Can't do that!"
+     ensure
+       puts "That was fun!"
+     end
+
+     # Output
+     #=> Can't do that!
+     #=> That was fun!
+
+  If the statement 1/0 is changed to something harmless, like 1/1, the rescue
+  clause will not be executed but the ensure clause still will.
+
+  * Execute also: ? begin
+  * Execute also: ? rescue
+keywords|true: |
+  The sole instance of the special class TrueClass. true encapsulates Boolean
+  truth; however, <emph>all</emph> objects in Ruby are true in the Boolean sense
+  (informally, they cause an if test to succeed), with the exceptions of false and
+  nil.
+
+  Because Ruby regards most objects (and therefore most expressions) as "true", it
+  is not always necessary to return true from a method to force a condition to
+  succeed. However, it‘s good practice to do so, as it makes the intention clear.
+
+  * Execute also: ? false
+  * Execute also: ? nil
+globals|$-w: |
+  An alias of $VERBOSE.
+
+  * Execute also: ? $VERBOSE
+globals|$-0: |
+  The alias to $/.
+
+  * Execute also: ? $/
+globals|$LOADED_FEATURES: |
+  The alias to the $".
+
+  * Execute also: ? $"
+globals|$+: |
+  The highest group matched by the last successful match.
+globals|$-i: |
+  In in-place-edit mode, this variable holds the extension, otherwise nil.
+keywords|module: |
+  Opens a module definition block.
+
+     module ModuleName
+       # module-contents
+     end
+
+  Defines a new module, or re-opens an existing module. Inside the module
+  definition, self is set to the module object itself. Modules in ruby are
+  collections of code, they have two distinct use-cases:
+
+  1 As a Namespace. Often all of the code in a rubygem will be written in the
+    same module to avoid naming collisions with code not in that Gem.
+
+  2 As a set of shared functions. Modules can be included into Classes, which
+    makes all of the methods defined in the module available to instances of
+    the class. This can be used to emulate multiple-inheritance, or to divide
+    one large class into more manageable chunks.
+
+  Note that, though the class `Class` inherits from `Module`, this is more of an
+  implementation detail than a direct, Liskov-substitutable interface: modules
+  can be `include`d, `prepend`ed, `extend`ed or `using`d, while classes cannot.
+  On the other hand, classes can be instantiated, where modules cannot.
+
+  * Execute also: ? class
+constants|STDOUT: |
+  The standard output. The default value for $stdout.
