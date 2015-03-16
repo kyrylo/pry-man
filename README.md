@@ -1,17 +1,82 @@
-# pry-docmore
+# Pry Man
 
-You might have noticed that there are parts of the system that
-[pry](http://pry.github.com/) doesn't quite reach, even if you install
-[pry-doc](https://rubygems.org/gems/pry-doc), such as keywords and the vars like $0, $:, etc.
+Manual pages for Pry. You might have noticed that there are parts of the system
+that Pry doesn't quite reach, even if you install
+[pry-doc](https://rubygems.org/gems/pry-doc), such as keywords and the vars like
+`$0`, `$:`, etc. It will probably be eventually merged with Pry Doc.
 
 This project will fix that, and anything else along these lines.
 
+## Examples
+
+List all mans.
+
+```
+[2] pry(main)> mans
+globals: $!  $$  $&  $'  $*  $+  $,
+keywords: $"  BEGIN  END  __ENCODING__
+constants: ARGF  ARGV  DATA  ENV  FALSE
+pry: commands  pryrc
+```
+
+Mans for Pry.
+
+```
+[1] pry(main)> ? pryrc
+
+pryrc (pry)
+--
+The `.pryrc` file is analogous to the `.irbrc` file for IRB.  You can use the
+`.pryrc` file to customize Pry.
+...
+...
+```
+
+Mans for constants
+
+```
+[3] pry(main)> ? TRUE
+
+TRUE (constants)
+--
+The typical true value.
+```
+
+Mans for global variables.
+
+```
+[4] pry(main)> ? $$
+
+$$ (globals)
+--
+The process number of the Ruby running this script.
+```
+
+Mans for keywords
+
+```
+[7] pry(main)> ? else
+
+else (keywords)
+--
+Denotes a final conditional branch. It appears in connection with if, unless,
+and case, and rescue. (In the case of rescue, the else branch is executed if no
+exception is raised). The else clause is always the last branch in the entire
+statement, except in the case of rescue where it can be followed by an ensure
+clause.
+
+* Execute also: ? if
+* Execute also: ? unless
+* Execute also: ? case
+* Execute also: ? rescue
+```
+
 ## Wiki-sourced.
 
-This project's [wiki](https://github.com/rking/pry-docmore/wiki/_pages) hosts
+This project's [wiki](https://github.com/kyrylo/pry-man/wiki) hosts
 the canonical home for the data.
 
-Edit away!  (I mean that. I'd love to add in whatever additional thoughts you
+Edit away! (I mean that. I'd love to add in whatever additional thoughts you
 have. The goal is to be really informative, so your perspective and examples
 count for a lot.)
 
