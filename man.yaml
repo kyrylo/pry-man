@@ -1215,7 +1215,7 @@ constants|ARGF: |
 
   * Execute also: ? $<
 globals|$-i: |
-  In in-place-edit mode, this variable holds the extension, otherwise nil.
+  If in-place-edit mode, this variable holds the extension, otherwise nil.
 keywords|module: |
   Opens a module definition block.
 
