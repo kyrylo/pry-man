@@ -14,5 +14,5 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.files        = `git ls-files`.split("\n") + ['man.yaml']
 
-  s.add_dependency 'pry-doc'
+  s.add_dependency 'pry-doc', '~> 0.6.0'
 end
